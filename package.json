@@ -1,0 +1,16 @@
+{
+  "name": "esri-leaflet-socket",
+  "version": "0.0.1",
+  "description": "Plugin for consuming ArcGIS for Server data via a socket connection",
+  "main": "index.js",
+  "scripts": {
+    "build": "uglifyjs src/socket.js -o dist/esriSocket.min.js",
+    "serve": "http-server -p 5000 -c-1 -o"
+  },
+  "author": "Rowan Winsemius",
+  "license": "MIT",
+  "devDependencies": {
+    "node-static": "^0.7.7",
+    "uglify": "^0.1.5"
+  }
+}

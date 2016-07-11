@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Esri Leaflet Socket Plugin</title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/leaflet/1.0.0-rc.1/leaflet.css"/>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/leaflet/1.0.0-rc.1/leaflet-src.js"></script>
+	<script src="https://cdn.jsdelivr.net/leaflet.esri/2.0.0/esri-leaflet.js"></script>
+
+	<script type="text/javascript" src="../src/socket.js"></script>
+
+
+</head>
+<body>
+	<div id="map" style="width: 800px; height: 600px; border: 1px solid #ccc"></div>
+	<br><br>
+	<script>
+
+		var map = L.map('map', {
+			center: [47.59242, -122.31726999],
+			zoom: 15
+		});
+
+		var CartoDB_Positron = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
+			attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
+			subdomains: 'abcd',
+			maxZoom: 19
+		}).addTo(map);
+
+		function createRandomFill(){
+			return '#'+(Math.random()*0xFFFFFF<<0).toString(16);
+		}
+
+		var buses = L.esri.socketFeatureLayer({
+			url: 'https://geoeventsample3.esri.com:6443/arcgis/rest/services/SeattleBus/StreamServer',
+			pointToLayer: function (geojson, latlng) {
+				return L.circleMarker(latlng, {
+					fillColor: createRandomFill(),
+					fillOpacity: 0.8,
+					color: "#cccccc",
+					weight: 2
+				});
+			},
+		}).addTo(map);
+
+		buses.bindPopup(function (evt) {
+			return L.Util.template('<p><strong>Bus No:</strong> {BusNo}<br><strong>Date Time</strong> {DateTimeStamp}<br><strong>Route:</strong> {RouteID}</p>', evt.feature.properties);
+		});
+
+		function msgEvent (evt) {
+			console.log("Yay we're connected");
+			console.log(evt);
+		}
+
+		buses.on('socketMessage', msgEvent);
+
+		buses.subscribe();
+
+	</script>
+</body>
+</html>
