@@ -1,5 +1,5 @@
 {
-  "name": "esri-leaflet-socket",
+  "name": "esri-leaflet-stream",
   "version": "0.0.1",
   "description": "Plugin for consuming ArcGIS for Server data via a socket connection",
   "main": "index.js",

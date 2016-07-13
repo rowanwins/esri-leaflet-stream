@@ -31,7 +31,19 @@
 		}
 
 		var buses = L.esri.socketFeatureLayer({
-			url: 'https://geoeventsample3.esri.com:6443/arcgis/rest/services/SeattleBus/StreamServer',
+			url: 'wss://geoeventsample3.esri.com:8443/arcgis/ws/services/SeattleBus/StreamServer',
+			idField: 'BusNo',
+			useMapViewExtent: true,
+			customExtent: {
+				xmin: -122.7846,
+				ymin: 47.2559,
+				xmax: -121.5047,
+				ymax: 48.057,
+				spatialReference: {
+					wkid: 4326
+				}
+			},
+			where: "BusNo='2679'",
 			pointToLayer: function (geojson, latlng) {
 				return L.circleMarker(latlng, {
 					fillColor: createRandomFill(),
@@ -51,9 +63,8 @@
 			console.log(evt);
 		}
 
-		buses.on('socketMessage', msgEvent);
-
 		buses.subscribe();
+
 
 	</script>
 </body>
