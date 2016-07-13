@@ -1,5 +1,5 @@
 # Esri Leaflet Socket
-A plugin for Esri Leaflet that enables consuming streaming data from a socket connection service published by ArcGIS Server.
+A plugin for Esri Leaflet that enables consuming streaming data from a socket connection service published by ArcGIS Server. [View Demo](https://rowanwins.github.io/esri-leaflet-socket/example/)
 
 ### Usage
 **Step 1.** Include the required js in your document. 
@@ -27,6 +27,7 @@ A plugin for Esri Leaflet that enables consuming streaming data from a socket co
 | useMapViewExtent | Boolean | Applies a grographic filter meaning data is only sent for the current map view (*note:* the extent updates as the map is panned and zoomed). Defaults to false. |
 | customExtent | [Envelope Object](http://resources.arcgis.com/en/help/arcgis-rest-api/index.html#//02r3000000n1000000) | An Esri envelope to spatial restrict the features. Not set by default. |
 | where | String | An optional expression to filter features server side. String values should be denoted using single quotes ie: where: "FIELDNAME = 'field value'"; More information about valid SQL syntax can be found here. |
+| fields | Array | An array of fieldnames to pull from the service. Includes all fields by default. You should always specify the name of the unique id for the service. |
 
 #### Example
 ```` js

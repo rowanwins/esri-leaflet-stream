@@ -20,7 +20,7 @@
 			zoom: 15
 		});
 
-		var CartoDB_Positron = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
+		var CartoDB_Positron = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
 			attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
 			subdomains: 'abcd',
 			maxZoom: 19
@@ -34,16 +34,6 @@
 			url: 'wss://geoeventsample3.esri.com:8443/arcgis/ws/services/SeattleBus/StreamServer',
 			idField: 'BusNo',
 			useMapViewExtent: true,
-			customExtent: {
-				xmin: -122.7846,
-				ymin: 47.2559,
-				xmax: -121.5047,
-				ymax: 48.057,
-				spatialReference: {
-					wkid: 4326
-				}
-			},
-			where: "BusNo='2679'",
 			pointToLayer: function (geojson, latlng) {
 				return L.circleMarker(latlng, {
 					fillColor: createRandomFill(),
