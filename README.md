@@ -24,8 +24,7 @@ A plugin for Esri Leaflet that enables consuming [Stream Services](http://server
 ### Options
 | Option        | Type   | Description   | 
 | ------------- |--------|---------------|
-| url | String | **Required** The service url of a streaming layer eg 'https://geoeventsample3.esri.com:6443/arcgis/rest/services/SeattleBus/StreamServer'
-.|
+| url | String | **Required** The service url of a streaming layer eg 'https://geoeventsample3.esri.com:6443/arcgis/rest/services/SeattleBus/StreamServer'.|
 | useMapViewExtent | Boolean | Applies a geographic filter meaning data is only sent for the current map view (*note:* the extent updates as the map is panned and zoomed). Defaults to false. |
 | customExtent | [Envelope Object](http://resources.arcgis.com/en/help/arcgis-rest-api/index.html#//02r3000000n1000000) | An Esri envelope to spatial restrict the features. Not set by default. |
 | where | String | An optional expression to filter features server side. String values should be denoted using single quotes ie: where: "FIELDNAME = 'field value'"; More information about [valid SQL syntax](http://resources.arcgis.com/en/help/main/10.2/index.html#/SQL_reference_for_query_expressions_used_in_ArcGIS/00s500000033000000/) can be found here. |
@@ -55,8 +54,8 @@ A plugin for Esri Leaflet that enables consuming [Stream Services](http://server
 | ------------- |---------------|
 | setCustomExtent(<[Envelope Object](http://resources.arcgis.com/en/help/arcgis-rest-api/index.html#//02r3000000n1000000)>) | Set a new custom extent for the socket connection. |
 | clearCustomExtent() | Removes the custom extent meaning no geographic filter will be applied to the socket connection. |
-| useMapViewExtent(<Boolean>) | Set whether to use the map view extent as a geographic filter for the socket connection, this updates automatically as the map is zoomed and panned. |
-| setWhere(<String> where) | Sets a where clause on the socket connection to limit data received by the socket connection. |
+| useMapViewExtent(Boolean) | Set whether to use the map view extent as a geographic filter for the socket connection, this updates automatically as the map is zoomed and panned. |
+| setWhere(String) | Sets a where clause on the socket connection to limit data received by the socket connection. |
 | clearWhere() | Remove the where clause from the socket connection. |
 | clearLayers() | Clears the layers drawn by the socket connection. |
 
@@ -84,7 +83,6 @@ A plugin for Esri Leaflet that enables consuming [Stream Services](http://server
 		console.log(msgDetails.feature);
 		console.log(msgDetails.layer);
 	}
-
 	buses.on('socketMessage', msgDetails);
 ```
 
