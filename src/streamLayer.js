@@ -70,10 +70,7 @@ clearWhere: function () {
 clearLayers: function () {
   for (var i in this._layers) {
     this._map.removeLayer(this._layers[i]);
-    this.fire('removefeature', {
-      feature: this._layers[i].feature,
-      permanent: false
-    }, true);
+    delete this._layers[i];
   }
 },
 
