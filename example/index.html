@@ -1,18 +1,51 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Esri Leaflet Socket Plugin</title>
+	<title>Esri Leaflet Stream Layer Plugin</title>
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/leaflet/1.0.0-rc.1/leaflet.css"/>
 	<script type="text/javascript" src="https://cdn.jsdelivr.net/leaflet/1.0.0-rc.1/leaflet-src.js"></script>
 	<script src="https://cdn.jsdelivr.net/leaflet.esri/2.0.0/esri-leaflet.js"></script>
 
-	<script type="text/javascript" src="../src/socket.js"></script>
+	<script type="text/javascript" src="../dist/esri-leaflet-stream.js"></script>
+	<!-- <script type="text/javascript" src="../src/streamLayer.js"></script>
+ -->
+	<style>
+		body { margin:0; padding:0; }
+		#map { position: absolute; top:0; bottom:0; right:0; left:0; }
+		#query {
+			position: absolute;
+			top: 10px;
+			right: 10px;
+			z-index: 1000;
+			background: white;
+			padding: 1em;
+		}
 
+		#query select {
+			font-size: 16px;
+		}
+	</style>
 
 </head>
 <body>
-	<div id="map" style="width: 800px; height: 600px; border: 1px solid #ccc"></div>
-	<br><br>
+	<div id="map"></div>
+	<div id="query" class="leaflet-bar">
+		<label>
+			Track which buses?
+			<select id="whichBuses">
+				<option value='1=1'>All</option>
+				<option value="BusNo='2679'">2679</option>
+			</select>
+		</label>
+		<label>
+			Show where
+			<select id="showWhere">
+				<option value='everywhere'>Everywhere</option>
+				<option value="mapextent">Current Extent</option>
+			</select>
+		</label>
+		<button id="clear">Clear markers</button>
+	</div>
 	<script>
 
 		var map = L.map('map', {
@@ -20,7 +53,7 @@
 			zoom: 15
 		});
 
-		var CartoDB_Positron = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
+		L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
 			attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
 			subdomains: 'abcd',
 			maxZoom: 19
@@ -29,11 +62,8 @@
 		function createRandomFill(){
 			return '#'+(Math.random()*0xFFFFFF<<0).toString(16);
 		}
-
-		var buses = L.esri.socketFeatureLayer({
-			url: 'wss://geoeventsample3.esri.com:8443/arcgis/ws/services/SeattleBus/StreamServer',
-			idField: 'BusNo',
-			useMapViewExtent: true,
+		var buses = L.esri.streamFeatureLayer({
+			url: 'https://geoeventsample3.esri.com:6443/arcgis/rest/services/SeattleBus/StreamServer',
 			pointToLayer: function (geojson, latlng) {
 				return L.circleMarker(latlng, {
 					fillColor: createRandomFill(),
@@ -48,14 +78,26 @@
 			return L.Util.template('<p><strong>Bus No:</strong> {BusNo}<br><strong>Date Time</strong> {DateTimeStamp}<br><strong>Route:</strong> {RouteID}</p>', evt.feature.properties);
 		});
 
-		function msgEvent (evt) {
-			console.log("Yay we're connected");
-			console.log(evt);
-		}
+		var whichBuses = document.getElementById('whichBuses');
 
-		buses.subscribe();
+		whichBuses.addEventListener('change', function() {
+			buses.setWhere(whichBuses.value);
+		});
 
+		var whereBuses = document.getElementById('showWhere');
 
+		whereBuses.addEventListener('change', function() {
+			if (whereBuses.value === 'mapextent') {
+				buses.useMapViewExtent(true);
+			} else {
+				buses.useMapViewExtent(false);
+			}
+		});
+
+		var button = document.getElementById('clear');
+		button.addEventListener('click', function (){
+			buses.clearLayers();
+		})
 	</script>
 </body>
 </html>

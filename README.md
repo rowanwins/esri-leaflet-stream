@@ -1,41 +1,43 @@
-# Esri Leaflet Socket
-A plugin for Esri Leaflet that enables consuming streaming data from a socket connection service published by ArcGIS Server. [View Demo](https://rowanwins.github.io/esri-leaflet-socket/example/)
+# Esri Leaflet Stream
+A plugin for Esri Leaflet that enables consuming [Stream Services](http://server.arcgis.com/en/geoevent-extension/latest/process-event-data/stream-services.htm) published by ArcGIS for Server. [View Demo](https://rowanwins.github.io/esri-leaflet-stream/example/)
 
-### Usage
+### Basic Usage
 **Step 1.** Include the required js in your document. 
 
 ```html
-   	<script src="dist/esriSocket.min.js"></script>
+   	<script src="dist/esri-leaflet-stream.min.js"></script>
 ```
 
-**Step 2.** Create a socket connection using the `L.esri.socketFeatureLayer` function and start the connection by calling the subscribe method.
+**Step 2.** Create a stream layer using the `L.esri.streamFeatureLayer` function, the socket connection is started automatically when the layer is added to the map.
 
-``` js
-	var buses = L.esri.socketFeatureLayer({
-		url: 'wss://geoeventsample3.esri.com:8443/arcgis/ws/services/SeattleBus/StreamServer',
-		idField: 'BusNo'
+```js
+	var buses = L.esri.streamFeatureLayer({
+		url: 'https://geoeventsample3.esri.com:6443/arcgis/rest/services/SeattleBus/StreamServer'
 	}).addTo(map);
-
-	buses.subscribe();
 ```
+
+### Background Information
+[Esri Stream Services](http://server.arcgis.com/en/geoevent-extension/latest/process-event-data/stream-services.htm) provide a convenient way to consume streaming data published via the GeoEvent Extension with ArcGIS for Server. Basically they continually send data to the website which you can then use however you'd like. For more information also check out the [REST API](http://resources.arcgis.com/en/help/arcgis-rest-api/index.html#//02r300000288000000).
+
+
 
 ### Options
 | Option        | Type   | Description   | 
 | ------------- |--------|---------------|
-| url | String | **Required** The socket url eg wss://geoeventsample3.esri.com:8443/arcgis/ws/services/SeattleBus/StreamServer.|
-| idField  | String | **Required** An attribute to use at the unique id.|
-| useMapViewExtent | Boolean | Applies a grographic filter meaning data is only sent for the current map view (*note:* the extent updates as the map is panned and zoomed). Defaults to false. |
+| url | String | **Required** The service url of a streaming layer eg 'https://geoeventsample3.esri.com:6443/arcgis/rest/services/SeattleBus/StreamServer'
+.|
+| useMapViewExtent | Boolean | Applies a geographic filter meaning data is only sent for the current map view (*note:* the extent updates as the map is panned and zoomed). Defaults to false. |
 | customExtent | [Envelope Object](http://resources.arcgis.com/en/help/arcgis-rest-api/index.html#//02r3000000n1000000) | An Esri envelope to spatial restrict the features. Not set by default. |
-| where | String | An optional expression to filter features server side. String values should be denoted using single quotes ie: where: "FIELDNAME = 'field value'"; More information about valid SQL syntax can be found here. |
-| fields | Array | An array of fieldnames to pull from the service. Includes all fields by default. You should always specify the name of the unique id for the service. |
+| where | String | An optional expression to filter features server side. String values should be denoted using single quotes ie: where: "FIELDNAME = 'field value'"; More information about [valid SQL syntax](http://resources.arcgis.com/en/help/main/10.2/index.html#/SQL_reference_for_query_expressions_used_in_ArcGIS/00s500000033000000/) can be found here. |
+| fields | Array | An array of fieldnames to pull from the service. Includes all fields by default. |
 
 #### Example
-```` js
-	var buses = L.esri.socketFeatureLayer({
-		url: 'wss://geoeventsample3.esri.com:8443/arcgis/ws/services/SeattleBus/StreamServer',
-		idField: 'BusNo',
+```js
+	var buses = L.esri.streamFeatureLayer({
+		url: 'https://geoeventsample3.esri.com:6443/arcgis/rest/services/SeattleBus/StreamServer',
 		useMapViewExtent: true,
 		where: "BusNo='2679'",
+		fields: ['BusNo', 'Heading'],
 		pointToLayer: function (geojson, latlng) {
 			return L.circleMarker(latlng, {
 				fillColor: createRandomFill(),
@@ -46,42 +48,45 @@ A plugin for Esri Leaflet that enables consuming streaming data from a socket co
 		},
 	}).addTo(map);
 
-````
+```
 
 ### Methods
 | Method        | Description   | 
 | ------------- |---------------|
-| subscribe | Opens the socket connection ready to recieve data. |
-| unsubscribe | Closes the socket connection. |
-| setCustomExtent | Set a new custom extent. **Note:** this is not applied automatically and needs to be followed by a call to `updateSocketParams`. |
-| removeCustomExtent | Removes the custom extent meaning no geographic filter will be applied to the connection. **Note:** this is not applied automatically and needs to be followed by a call to `updateSocketParams`. |
-| removeMapViewExtentListener | Removes the map view extent setting. **Note:** this is not applied automatically and needs to be followed by a call to `updateSocketParams`. |
-| setWhere | Sets the where clause of the socket connection. **Note:** this is not applied automatically and needs to be followed by a call to `updateSocketParams`. |
-| updateSocketParams | Updates the socket connection parameters. |
+| setCustomExtent(<[Envelope Object](http://resources.arcgis.com/en/help/arcgis-rest-api/index.html#//02r3000000n1000000)>) | Set a new custom extent for the socket connection. |
+| clearCustomExtent() | Removes the custom extent meaning no geographic filter will be applied to the socket connection. |
+| useMapViewExtent(<Boolean>) | Set whether to use the map view extent as a geographic filter for the socket connection, this updates automatically as the map is zoomed and panned. |
+| setWhere(<String> where) | Sets a where clause on the socket connection to limit data received by the socket connection. |
+| clearWhere() | Remove the where clause from the socket connection. |
+| clearLayers() | Clears the layers drawn by the socket connection. |
+
 
 #### Example
-````js
+```js
+	var buses = L.esri.streamFeatureLayer({
+		url: 'https://geoeventsample3.esri.com:6443/arcgis/rest/services/SeattleBus/StreamServer'
+	}).addTo(map);
 	buses.setWhere("BusNo='3452'");
-	buses.removeMapViewExtentListener();
-	buses.updateSocketParams();
-````
+	buses.useMapViewExtent(false);
+```
 
 ### Events
 | Event        | Description   | 
 | ------------ |---------------|
-| socketConnected | The socket connection has successfully connection. |
-| socketError | The socket connection failed to connection. |
+| socketConnected | The socket connection has successfully connected. |
+| socketError | The socket connection failed to connect. |
 | socketMessage | A message was received by the socket connection, returns an object containing the geojson feature as well as the resulting leaflet layer. |
+| socketUpdated | A message confirming that the socket connection has been updated, triggered when the filters change. |
 
 #### Example
-```` js
-	function msgEvent (evt) {
-		console.log(evt.feature);
-		console.log(evt.layer);
+```js
+	function msgEvent (msgDetails) {
+		console.log(msgDetails.feature);
+		console.log(msgDetails.layer);
 	}
 
-	buses.on('socketMessage', msgEvent);
-````
+	buses.on('socketMessage', msgDetails);
+```
 
 ### Acknowledgements
-Huge hats off go to [mourner](https://github.com/mourner) and all the [contributors](https://github.com/Leaflet/Leaflet/graphs/contributors) to the leaflet.js project, it's an amazing piece of open source software!
+Huge hats off go to [mourner](https://github.com/mourner) and all the [contributors](https://github.com/Leaflet/Leaflet/graphs/contributors) to the leaflet.js project! Additional thanks to the [folks](https://github.com/Esri/esri-leaflet/graphs/contributors) involved in [esri-leaflet](http://esri.github.io/esri-leaflet/) for making it super easy to work with services published from the Esri stack.

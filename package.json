@@ -1,10 +1,10 @@
 {
   "name": "esri-leaflet-stream",
-  "version": "0.0.1",
-  "description": "Plugin for consuming ArcGIS for Server data via a socket connection",
+  "version": "0.1.0",
+  "description": "Plugin for consuming streaming data from ArcGIS for Server via a socket connection",
   "main": "index.js",
   "scripts": {
-    "build": "uglifyjs src/socket.js -o dist/esriSocket.min.js",
+    "build": "uglifyjs src/streamLayer.js -o dist/esri-leaflet-stream.min.js",
     "serve": "http-server -p 5000 -c-1 -o"
   },
   "author": "Rowan Winsemius",
