@@ -32,17 +32,17 @@
 	<div id="map"></div>
 	<div id="query" class="leaflet-bar">
 		<label>
-			Track which buses?
-			<select id="whichBuses">
+			Track which Bus?
+			<select id="whichBus">
 				<option value='1=1'>All</option>
-				<option value="BusNo='2679'">2679</option>
+				<option value="id='3988'">3988</option>
 			</select>
 		</label>
 		<label>
 			Show where
 			<select id="showWhere">
-				<option value='everywhere'>Everywhere</option>
 				<option value="mapextent">Current Extent</option>
+				<option value='everywhere'>Everywhere</option>
 			</select>
 		</label>
 		<button id="clear">Clear markers</button>
@@ -50,8 +50,8 @@
 	<script>
 
 		var map = L.map('map', {
-			center: [47.59242, -122.31726999],
-			zoom: 15
+			center: [34.0522, -118.2437],
+			zoom: 10
 		});
 
 		L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
@@ -64,7 +64,7 @@
 			return '#'+(Math.random()*0xFFFFFF<<0).toString(16);
 		}
 		var buses = L.esri.streamFeatureLayer({
-			url: 'https://geoeventsample3.esri.com:6443/arcgis/rest/services/SeattleBus/StreamServer',
+			url: 'https://geoeventsample1.esri.com:6443/arcgis/rest/services/LABus/StreamServer',
 			pointToLayer: function (geojson, latlng) {
 				return L.circleMarker(latlng, {
 					fillColor: createRandomFill(),
@@ -76,13 +76,13 @@
 		}).addTo(map);
 
 		buses.bindPopup(function (evt) {
-			return L.Util.template('<p><strong>Bus No:</strong> {BusNo}<br><strong>Date Time</strong> {DateTimeStamp}<br><strong>Route:</strong> {RouteID}</p>', evt.feature.properties);
+			return L.Util.template('<p><strong>Route:</strong> {route_id}<br><strong>Heading:</strong> {heading}</p>', evt.feature.properties);
 		});
 
-		var whichBuses = document.getElementById('whichBuses');
+		var whichBus = document.getElementById('whichBus');
 
-		whichBuses.addEventListener('change', function() {
-			buses.setWhere(whichBuses.value);
+		whichBus.addEventListener('change', function() {
+			buses.setWhere(whichBus.value);
 		});
 
 		var whereBuses = document.getElementById('showWhere');
