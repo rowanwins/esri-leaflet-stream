@@ -4,19 +4,32 @@
   "description": "Plugin for consuming streaming data from ArcGIS for Server via a socket connection",
   "author": "Rowan Winsemius <rowanwins@yahoo.com.au>",
   "browser": "dist/esri-leaflet-stream.min.js",
+  "bugs": {
+    "url": "https://github.com/rowanwins/esri-leaflet-stream/issues"
+  },
   "contributors": [
-    "Rowan Winsemius <rowanwins@yahoo.com.au>"
+    "Rowan Winsemius <rowanwins@yahoo.com.au>",
+    "John Gravois <jgravois@esri.com> (http://johngravois.com)"
   ],
   "dependencies": {
     "leaflet": "^1.0.0-rc.3",
-    "esri-leaflet": "^2.0.0",
+    "esri-leaflet": "^2.0.0"
   },
   "devDependencies": {
     "node-static": "^0.7.7",
     "uglify": "^0.1.5"
-  }
+  },
+  "keywords": [
+    "arcgis",
+    "esri",
+    "esri leaflet",
+    "gis",
+    "leaflet plugin",
+    "mapping"
+  ],
   "license": "MIT",
   "main": "dist/esri-leaflet-stream.min.js",
+  "readmeFilename": "README.md",
   "repository": {
     "type": "git",
     "url": "git@github.com:rowanwins/esri-leaflet-stream.git"
