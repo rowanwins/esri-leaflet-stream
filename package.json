@@ -1,6 +1,6 @@
 {
   "name": "esri-leaflet-stream",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Plugin for consuming streaming data from ArcGIS for Server via a socket connection",
   "author": "Rowan Winsemius <rowanwins@yahoo.com.au>",
   "browser": "dist/esri-leaflet-stream.min.js",
