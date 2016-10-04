@@ -35,7 +35,7 @@
 			Track which Bus?
 			<select id="whichBus">
 				<option value='1=1'>All</option>
-				<option value="id='3988'">3988</option>
+				<option value="id='8318'">8318</option>
 			</select>
 		</label>
 		<label>
@@ -50,8 +50,8 @@
 	<script>
 
 		var map = L.map('map', {
-			center: [34.0522, -118.2437],
-			zoom: 10
+			center: [34.05, -118.24],
+			zoom: 14
 		});
 
 		L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
@@ -64,7 +64,7 @@
 			return '#'+(Math.random()*0xFFFFFF<<0).toString(16);
 		}
 		var buses = L.esri.streamFeatureLayer({
-			url: 'https://geoeventsample1.esri.com:6443/arcgis/rest/services/LABus/StreamServer',
+			url: 'https://geoeventsample3.esri.com:6443/arcgis/rest/services/LABus/StreamServer',
 			pointToLayer: function (geojson, latlng) {
 				return L.circleMarker(latlng, {
 					fillColor: createRandomFill(),
