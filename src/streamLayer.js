@@ -24,12 +24,7 @@ var StreamFeatureLayer = L.esri.FeatureLayer.extend({
         if (response.timeInfo.trackIdField) {
           this.idField = response.timeInfo.trackIdField;
         }
-        this.streamUrl = response.streamUrls[0].urls
-          .filter(function filterUrl(url) {
-            // returns wss if in list, otherwise ws (if in list)
-            return (!!isWss ? url.match(/wss\:\/\//) : url.match(/ws\:\/\//)) !== null;
-          })
-          .filter(function(_, i) {return i === 0;}).shift(); // first available element only
+        this.streamUrl = this.options.wss ? response.streamUrls[0].urls[1] : response.streamUrls[0].urls[0];
         this.socketReady = false;
         this._subscribe();
       }
