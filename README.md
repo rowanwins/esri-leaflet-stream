@@ -29,7 +29,7 @@ A plugin for Esri Leaflet that enables consuming [Stream Services](http://server
 | customExtent | [Envelope Object](http://resources.arcgis.com/en/help/arcgis-rest-api/index.html#//02r3000000n1000000) | An Esri envelope to spatial restrict the features. Not set by default. |
 | where | String | An optional expression to filter features server side. String values should be denoted using single quotes ie: where: "FIELDNAME = 'field value'"; More information about [valid SQL syntax](http://resources.arcgis.com/en/help/main/10.2/index.html#/SQL_reference_for_query_expressions_used_in_ArcGIS/00s500000033000000/) can be found here. |
 | fields | Array | An array of fieldnames to pull from the service. Includes all fields by default. |
-| wss | Boolean | Wether to uss secure protocol or not. Set to `false` as default |
+| wss | Boolean | Wether to uss secure protocol or not. Set to _false_ as default |
 
 #### Example
 ```js
