@@ -4,12 +4,14 @@ var StreamFeatureLayer = L.esri.FeatureLayer.extend({
     useCors: false,
     useMapViewExtent: false,
     customExtent: 'undefined',
-    where: '1=1'
+    where: '1=1',
+    wss: false
   },
 
   // PUBLIC METHODS
 
   onAdd: function (map) {
+        var isWss = !!this.options.wss;
 
     // Remove the event handlers added by the feature layer
     this._map.removeEventListener(this.getEvents(), this);
@@ -22,7 +24,12 @@ var StreamFeatureLayer = L.esri.FeatureLayer.extend({
         if (response.timeInfo.trackIdField) {
           this.idField = response.timeInfo.trackIdField;
         }
-        this.streamUrl = response.streamUrls[0].urls[0];
+        this.streamUrl = response.streamUrls[0].urls
+          .filter(function filterUrl(url) {
+            // returns wss if in list, otherwise ws (if in list)
+            return (!!isWss ? url.match(/wss\:\/\//) : url.match(/ws\:\/\//)) !== null;
+          })
+          .filter(function(_, i) {return i === 0;}).shift(); // first available element only
         this.socketReady = false;
         this._subscribe();
       }
@@ -79,13 +86,13 @@ clearLayers: function () {
   _subscribe: function () {
 
     this._socket = new WebSocket(this.streamUrl + '/subscribe');
-    
-    // Handle the various events thrown by the socket 
+
+    // Handle the various events thrown by the socket
     var mine = this;
-    
+
     this._socket.onopen = function () {
       mine._updateSocketParams();
-      mine.fire('socketConnected', mine); 
+      mine.fire('socketConnected', mine);
     };
 
     this._socket.onerror = function () {
@@ -149,13 +156,13 @@ clearLayers: function () {
 
   _onMessage: function (e) {
     var msg = JSON.parse(e.data)
-    
+
     if (msg.filter) {
       this.fire('socketUpdated');
       this.socketReady = true;
       return;
     }
-    
+
     if (!this.socketReady) {
       return
     }
@@ -164,8 +171,6 @@ clearLayers: function () {
     if (msg.geometry) {
       geojson = L.esri.Util.arcgisToGeoJSON(msg);
     }
-    
-
 
     // If we need to update features based on some id field
     if (this.idField) {
