@@ -3,8 +3,9 @@ var StreamFeatureLayer = L.esri.FeatureLayer.extend({
   options: {
     useCors: false,
     useMapViewExtent: false,
-    customExtent: 'undefined',
-    where: '1=1'
+    customExtent: null,
+    where: '1=1',
+    wss: false
   },
 
   // PUBLIC METHODS
@@ -23,6 +24,13 @@ var StreamFeatureLayer = L.esri.FeatureLayer.extend({
           this.idField = response.timeInfo.trackIdField;
         }
         this.streamUrl = response.streamUrls[0].urls[0];
+        if (this.options.wss) {
+          for (var i = 0; i < response.streamUrls[0].urls.length; i++) {
+            if (response.streamUrls[0].urls[i].indexOf('wss') > -1) {
+              this.streamUrl = response.streamUrls[0].urls[i]
+            }
+          }
+        }
         this.socketReady = false;
         this._subscribe();
       }
@@ -35,7 +43,7 @@ var StreamFeatureLayer = L.esri.FeatureLayer.extend({
   },
 
   clearCustomExtent: function () {
-    this.options.customExtent = undefined;
+    this.options.customExtent = null;
     this._updateSocketParams();
   },
 
@@ -51,7 +59,7 @@ var StreamFeatureLayer = L.esri.FeatureLayer.extend({
 
  setCustomExtent: function (extent) {
   if (!extent.xmin || !extent.ymin || !extent.xmax || !!extent.ymax) {
-    return console.log('Esri-Leaflet-Steam: Not a valid extent object');
+    return console.log('Esri-Leaflet-Stream: Not a valid extent object');
   }
   this.options.customExtent = extent;
   this._updateSocketParams();
@@ -134,7 +142,7 @@ clearLayers: function () {
       filter.outFields = null;
     }
 
-    if (this.options.customExtent === 'undefined' || !this.options.useMapViewExtent) {
+    if (this.options.customExtent === null || !this.options.useMapViewExtent) {
       filter.geometry = null;
     }
 

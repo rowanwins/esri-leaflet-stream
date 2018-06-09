@@ -8,7 +8,7 @@
 
 <!-- 	<script type="text/javascript" src="../dist/esri-leaflet-stream.min.js"></script>
  -->
- <script type="text/javascript" src="../src/streamLayer.js"></script>
+ <script type="text/javascript" src="../src/socket.js"></script>
 
 	<style>
 		body { margin:0; padding:0; }
@@ -32,10 +32,10 @@
 	<div id="map"></div>
 	<div id="query" class="leaflet-bar">
 		<label>
-			Track which Bus?
+			Track which Bus Run?
 			<select id="whichBus">
 				<option value='1=1'>All</option>
-				<option value="id='8318'">8318</option>
+				<option value="id='8318'">76_173_1</option>
 			</select>
 		</label>
 		<label>
@@ -64,7 +64,8 @@
 			return '#'+(Math.random()*0xFFFFFF<<0).toString(16);
 		}
 		var buses = L.esri.streamFeatureLayer({
-			url: 'https://geoeventsample3.esri.com:6443/arcgis/rest/services/LABus/StreamServer',
+			url: 'https://geoeventsample1.esri.com:6443/arcgis/rest/services/LABus/StreamServer',
+      wss: true,
 			pointToLayer: function (geojson, latlng) {
 				return L.circleMarker(latlng, {
 					fillColor: createRandomFill(),
@@ -76,13 +77,16 @@
 		}).addTo(map);
 
 		buses.bindPopup(function (evt) {
-			return L.Util.template('<p><strong>Route:</strong> {route_id}<br><strong>Heading:</strong> {heading}</p>', evt.feature.properties);
+			return L.Util.template('<p><strong>Route:</strong> {route_id}<br>' +
+        '<strong>Heading:</strong> {heading}<br>' + 
+        '<strong>Run ID:</strong> {run_id }</p>',
+      evt.feature.properties);
 		});
 
 		var whichBus = document.getElementById('whichBus');
 
 		whichBus.addEventListener('change', function() {
-			buses.setWhere(whichBus.value);
+			buses.setWhere("run_id='76_173_1'");
 		});
 
 		var whereBuses = document.getElementById('showWhere');

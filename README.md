@@ -12,7 +12,7 @@ A plugin for Esri Leaflet that enables consuming [Stream Services](http://server
 
 ```js
 	var buses = L.esri.streamFeatureLayer({
-		url: 'https://geoeventsample3.esri.com:6443/arcgis/rest/services/SeattleBus/StreamServer'
+		url: 'https://geoeventsample1.esri.com:6443/arcgis/rest/services/LABus/StreamServer'
 	}).addTo(map);
 ```
 
@@ -20,23 +20,23 @@ A plugin for Esri Leaflet that enables consuming [Stream Services](http://server
 [Esri Stream Services](http://server.arcgis.com/en/geoevent-extension/latest/process-event-data/stream-services.htm) provide a convenient way to consume streaming data published via the GeoEvent Extension with ArcGIS for Server. Basically they continually send data to the website which you can then use however you'd like. For more information also check out the [REST API](http://resources.arcgis.com/en/help/arcgis-rest-api/index.html#//02r300000288000000).
 
 
-
 ### Options
 | Option        | Type   | Description   | 
 | ------------- |--------|---------------|
-| url | String | **Required** The service url of a streaming layer eg https://geoeventsample3.esri.com:6443/arcgis/rest/services/SeattleBus/StreamServer|
+| url | String | **Required** The service url of a streaming layer eg `https://geoeventsample3.esri.com:6443/arcgis/rest/services/SeattleBus/StreamServer` |
 | useMapViewExtent | Boolean | Applies a geographic filter meaning data is only sent for the current map view (*note:* the extent updates as the map is panned and zoomed). Defaults to false. |
 | customExtent | [Envelope Object](http://resources.arcgis.com/en/help/arcgis-rest-api/index.html#//02r3000000n1000000) | An Esri envelope to spatial restrict the features. Not set by default. |
-| where | String | An optional expression to filter features server side. String values should be denoted using single quotes ie: where: "FIELDNAME = 'field value'"; More information about [valid SQL syntax](http://resources.arcgis.com/en/help/main/10.2/index.html#/SQL_reference_for_query_expressions_used_in_ArcGIS/00s500000033000000/) can be found here. |
+| where | String | An optional expression to filter features server side. String values should be denoted using single quotes ie: where: `"FIELDNAME = 'field value'"`; More information about [valid SQL syntax](http://resources.arcgis.com/en/help/main/10.2/index.html#/SQL_reference_for_query_expressions_used_in_ArcGIS/00s500000033000000/). |
 | fields | Array | An array of fieldnames to pull from the service. Includes all fields by default. |
+| wss | Boolean | Whether to use secure protocol or not. Set to `false` as default. |
 
 #### Example
 ```js
 	var buses = L.esri.streamFeatureLayer({
-		url: 'https://geoeventsample3.esri.com:6443/arcgis/rest/services/SeattleBus/StreamServer',
+		url: 'https://geoeventsample1.esri.com:6443/arcgis/rest/services/LABus/StreamServer',
 		useMapViewExtent: true,
-		where: "BusNo='2679'",
-		fields: ['BusNo', 'Heading'],
+		where: "run_id='76_173_1'",
+		fields: ['run_id', 'heading'],
 		pointToLayer: function (geojson, latlng) {
 			return L.circleMarker(latlng, {
 				fillColor: createRandomFill(),
@@ -63,9 +63,9 @@ A plugin for Esri Leaflet that enables consuming [Stream Services](http://server
 #### Example
 ```js
 	var buses = L.esri.streamFeatureLayer({
-		url: 'https://geoeventsample3.esri.com:6443/arcgis/rest/services/SeattleBus/StreamServer'
+		url: 'https://geoeventsample1.esri.com:6443/arcgis/rest/services/LABus/StreamServer'
 	}).addTo(map);
-	buses.setWhere("BusNo='3452'");
+	buses.setWhere("run_id='76_173_1'");
 	buses.useMapViewExtent(false);
 ```
 
